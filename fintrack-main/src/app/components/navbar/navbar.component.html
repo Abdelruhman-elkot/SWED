@@ -1,0 +1,11 @@
+<nav class="nav">
+  <div class="nav-brand">fin<span>track</span></div>
+  <div class="nav-balance">
+    <span class="nav-balance-label">total balance</span>
+    <span class="nav-balance-val">{{ finance.balance() | currency:'USD':'symbol':'1.2-2' }}</span>
+  </div>
+  <div class="nav-right">
+    <a class="avatar" routerLink="/user">AM</a>
+    <button class="add-btn" (click)="openModal.emit()">+ Add Transaction</button>
+  </div>
+</nav>

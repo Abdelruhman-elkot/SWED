@@ -1,0 +1,48 @@
+<div class="chips">
+  @for (f of filters; track f.value) {
+    <button class="chip" [class.active]="activeFilter() === f.value" (click)="setFilter(f.value)">
+      {{ f.label }}
+    </button>
+  }
+</div>
+
+<div class="table-section">
+  <div class="table-header">
+    <div class="table-title">expense list</div>
+    <input class="search-box" placeholder="search transactions..." [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)">
+  </div>
+
+  @for (txn of filteredTransactions(); track txn.id) {
+    <div class="expense-row">
+      <div class="exp-icon" [style.background]="txn.iconBg">{{ txn.icon }}</div>
+      <div class="exp-info">
+        <div class="exp-name">{{ txn.name }}</div>
+        <div class="exp-cat">{{ txn.category }}</div>
+      </div>
+      <div class="exp-date">{{ txn.date }}</div>
+      <div class="exp-amt" [class.neg]="txn.type !== 'income'" [class.pos]="txn.type === 'income'">
+        {{ txn.type === 'income' ? '+' : '-' }}{{ txn.amount | currency:'USD':'symbol':'1.2-2' }}
+      </div>
+      <div class="exp-actions">
+        <button class="act-btn" (click)="edit(txn)">Edit</button>
+        <button class="act-btn" (click)="delete(txn.id)">Delete</button>
+      </div>
+    </div>
+  }
+
+  @empty {
+    <div style="text-align:center;color:#6b7280;padding:24px 0;">No transactions found.</div>
+  }
+</div>
+@if (pendingDeleteId() !== null) {
+  <div class="confirm-overlay">
+    <div class="confirm-dialog">
+      <p class="confirm-title">Delete Transaction?</p>
+      <p class="confirm-msg">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="confirm-btn cancel" (click)="cancelDelete()">Cancel</button>
+        <button class="confirm-btn danger" (click)="confirmDelete()">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+}

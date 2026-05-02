@@ -1,0 +1,165 @@
+{
+  "transactions": [
+    {
+      "id": "1",
+      "name": "Grocery Shopping",
+      "category": "Food",
+      "type": "expense",
+      "amount": 124.5,
+      "date": "Apr 21",
+      "icon": "🛒",
+      "iconBg": "#1a2e1a"
+    },
+    {
+      "id": "2",
+      "name": "Monthly Rent",
+      "category": "Rent",
+      "type": "expense",
+      "amount": 963,
+      "date": "Apr 20",
+      "icon": "🏠",
+      "iconBg": "#1a1f2e"
+    },
+    {
+      "id": "3",
+      "name": "Salary Deposit",
+      "category": "Income",
+      "type": "income",
+      "amount": 5800,
+      "date": "Apr 20",
+      "icon": "💰",
+      "iconBg": "#0d2318"
+    },
+    {
+      "id": "4",
+      "name": "Uber Rides",
+      "category": "Transport",
+      "type": "expense",
+      "amount": 48.2,
+      "date": "Apr 19",
+      "icon": "🚗",
+      "iconBg": "#2e1a1a"
+    },
+    {
+      "id": "5",
+      "name": "Netflix",
+      "category": "Subscription",
+      "type": "subscription",
+      "amount": 15.99,
+      "date": "Apr 18",
+      "icon": "🎵",
+      "iconBg": "#2e1e0d"
+    },
+    {
+      "id": "6",
+      "name": "Restaurant Dinner",
+      "category": "Food",
+      "type": "expense",
+      "amount": 67.3,
+      "date": "Apr 17",
+      "icon": "🍕",
+      "iconBg": "#1a2a1a"
+    },
+    {
+      "id": "7",
+      "name": "Spotify",
+      "category": "Subscription",
+      "type": "subscription",
+      "amount": 9.99,
+      "date": "Apr 15",
+      "icon": "🎵",
+      "iconBg": "#2e1e0d"
+    },
+    {
+      "id": "11",
+      "name": "iCloud Storage",
+      "category": "Subscription",
+      "type": "subscription",
+      "amount": 2.99,
+      "date": "May 1",
+      "icon": "☁️",
+      "iconBg": "#0d1f2e"
+    },
+    {
+      "id": "12",
+      "name": "Adobe Creative Cloud",
+      "category": "Subscription",
+      "type": "subscription",
+      "amount": 54.99,
+      "date": "May 10",
+      "icon": "📊",
+      "iconBg": "#1a2e20"
+    },
+    {
+      "id": "13",
+      "name": "Azure",
+      "category": "Subscription",
+      "type": "subscription",
+      "amount": 100,
+      "date": "May 2",
+      "icon": "☁️",
+      "iconBg": "#0d1f2e"
+    }
+  ],
+  "subscriptions": [
+    {
+      "name": "Netflix",
+      "icon": "🎵",
+      "iconBg": "#2e1e0d",
+      "price": 15.99,
+      "renewDate": "Jun 1",
+      "frequency": "monthly",
+      "id": "jtlYDn5sgFU"
+    },
+    {
+      "name": "Spotify",
+      "icon": "🎵",
+      "iconBg": "#2e1e0d",
+      "price": 9.99,
+      "renewDate": "May 15",
+      "frequency": "monthly",
+      "id": "huL0ghaZ18o"
+    },
+    {
+      "name": "iCloud 200GB",
+      "icon": "☁️",
+      "iconBg": "#0d1f2e",
+      "price": 2.99,
+      "renewDate": "May 1",
+      "frequency": "monthly",
+      "id": "fI6uSWBy0lI"
+    },
+    {
+      "name": "Adobe CC",
+      "icon": "📊",
+      "iconBg": "#1a2e20",
+      "price": 54.99,
+      "renewDate": "May 10",
+      "frequency": "monthly",
+      "id": "6bPKgZVDxcY"
+    },
+    {
+      "name": "Amazon",
+      "price": 50,
+      "icon": "🎵",
+      "iconBg": "#2e1e0d",
+      "renewDate": "Jun 1",
+      "frequency": "monthly",
+      "id": "-voHWu26RF8"
+    }
+  ],
+  "finance": {
+    "balance": 12500,
+    "income": 5800,
+    "budget": 4200
+  },
+  "users": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "+1 234 567 892"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

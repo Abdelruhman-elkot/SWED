@@ -1,0 +1,46 @@
+<div class="modal-overlay" [class.open]="isOpen()" (click)="onOverlayClick($event)">
+  <div class="modal">
+    <div class="modal-title">{{ isEditMode ? 'Edit Transaction' : 'Add Transaction' }}</div>
+
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <input class="form-input" list="subscriptionNames" [(ngModel)]="name" placeholder="e.g. Coffee, Salary..." type="text">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Amount ($)</label>
+      <input class="form-input" [(ngModel)]="amount" placeholder="0.00" type="number" step="0.01">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <select class="form-select" [(ngModel)]="type" (ngModelChange)="onTypeChange($event)">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+        <option value="subscription">Subscription</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" [(ngModel)]="category" [disabled]="type === 'subscription'">
+        @for (cat of categories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+      @if (type === 'subscription') {
+        <p class="form-note">This will be added as a monthly subscription and billed every month.</p>
+        <datalist id="subscriptionNames">
+          @for (name of subscriptionNames(); track name) {
+            <option [value]="name"></option>
+          }
+        </datalist>
+      }
+    </div>
+
+    <div class="modal-btns">
+      <button class="modal-cancel" (click)="close.emit()">Cancel</button>
+      <button class="modal-submit" (click)="submit()">{{ isEditMode ? 'Update' : 'Add' }}</button>
+    </div>
+  </div>
+</div>

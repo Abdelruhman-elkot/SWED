@@ -1,0 +1,14 @@
+<app-navbar (openModal)="openModal()" />
+<div class="main">
+  <div class="left-panel">
+    <app-summary-cards></app-summary-cards>
+    <app-donut-chart></app-donut-chart>
+    <app-expense-list (editTransaction)="onEditTransaction($event)"></app-expense-list>
+  </div>
+  <app-right-panel></app-right-panel>
+</div>
+<app-add-transaction-modal
+  [isOpen]="modalOpen()"
+  [editingTransaction]="editingTransaction()"
+  (close)="onCloseModal()"
+/>

@@ -1,0 +1,31 @@
+<div class="right-panel">
+  <div class="panel-title">recent transactions</div>
+  @for (txn of finance.recentTransactions(); track txn.id) {
+    <div class="txn-item">
+      <div class="txn-icon" [style.background]="txn.iconBg">{{ txn.icon }}</div>
+      <div class="txn-info">
+        <div class="txn-name">{{ txn.name }}</div>
+        <div class="txn-time">{{ txn.date }}</div>
+      </div>
+      <div class="txn-amt" [class.neg]="txn.type !== 'income'" [class.pos]="txn.type === 'income'">
+        {{ txn.type === 'income' ? '+' : '-' }}{{ txn.amount | currency:'USD':'symbol':'1.2-2' }}
+      </div>
+    </div>
+  }
+
+  <div class="sub-section">
+    <div class="panel-title">active subscriptions</div>
+    @for (sub of finance.subscriptions(); track sub.name) {
+      <div class="sub-item">
+        <div class="sub-left">
+          <div class="sub-icon" [style.background]="sub.iconBg">{{ sub.icon }}</div>
+          <div>
+            <div class="sub-name">{{ sub.name }}</div>
+            <div class="sub-renew">Renews {{ sub.renewDate }} · monthly</div>
+          </div>
+        </div>
+        <div class="sub-price">{{ sub.price | currency:'USD':'symbol':'1.2-2' }}/mo</div>
+      </div>
+    }
+  </div>
+</div>

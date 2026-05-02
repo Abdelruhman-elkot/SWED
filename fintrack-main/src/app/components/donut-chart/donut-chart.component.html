@@ -1,0 +1,23 @@
+<div class="chart-section">
+  <div class="chart-title">spending by category</div>
+  <div class="donut-row">
+    <div class="donut-wrap">
+      <canvas #donutCanvas width="200" height="200"></canvas>
+      <div class="donut-center">
+        <div class="donut-center-val">{{ totalSpent() | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="donut-center-label">this month</div>
+      </div>
+    </div>
+    <div class="donut-legend">
+      @for (cat of categoryData(); track cat.label) {
+        <div class="legend-item">
+          <div class="legend-left">
+            <div class="legend-dot" [style.background]="cat.color"></div>
+            {{ cat.label }}
+          </div>
+          <div class="legend-pct">{{ cat.pct }}% — {{ cat.amount | currency:'USD':'symbol':'1.0-0' }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

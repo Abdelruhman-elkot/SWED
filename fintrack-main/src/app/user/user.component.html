@@ -1,0 +1,136 @@
+<div class="wrap">
+  <a routerLink="/" class="back-link">&larr; Back to Dashboard</a>
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar">{{ initials }}</div>
+      <h2>{{ user.name }}</h2>
+      <p>{{ user.email }}</p>
+    </div>
+
+    <div class="card-body">
+      <ng-container *ngIf="!isEditing">
+        <div class="info-row">
+          <div class="icon-wrap">👤</div>
+          <div>
+            <div class="info-label">Full name</div>
+            <div class="info-value">{{ user.name }}</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="icon-wrap">✉️</div>
+          <div>
+            <div class="info-label">Email</div>
+            <div class="info-value">{{ user.email }}</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="icon-wrap">📞</div>
+          <div>
+            <div class="info-label">Phone</div>
+            <div class="info-value">{{ user.phone }}</div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isEditing">
+        <div class="info-row">
+          <div class="icon-wrap">👤</div>
+          <div style="flex:1">
+            <div class="info-label">Full name</div>
+            <input class="info-input" [(ngModel)]="editData.name">
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="icon-wrap">✉️</div>
+          <div style="flex:1">
+            <div class="info-label">Email</div>
+            <input class="info-input" [(ngModel)]="editData.email">
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="icon-wrap">📞</div>
+          <div style="flex:1">
+            <div class="info-label">Phone</div>
+            <input class="info-input" [(ngModel)]="editData.phone">
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-primary"
+        (click)="isEditing ? saveEdit() : startEdit()">
+        {{ isEditing ? 'Save changes' : 'Edit profile' }}
+      </button>
+      <button class="btn btn-secondary"
+        *ngIf="isEditing"
+        (click)="cancelEdit()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header">Financial overview</div>
+    <div class="section-body">
+
+      <div class="stat-row">
+        <span class="stat-label">Balance</span>
+        <span class="stat-green">{{ finance.balance() | currency }}</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Monthly income</span>
+        <span class="stat-green">{{ finance.income() | currency }}</span>
+      </div>
+
+      <!-- Update financials -->
+      <div class="fin-inputs">
+        <input class="add-input" type="number"
+          [(ngModel)]="tempBalance" placeholder="Balance ($)">
+        <input class="add-input" type="number"
+          [(ngModel)]="tempIncome" placeholder="Income ($)">
+      </div>
+      <button class="btn btn-primary" (click)="saveFinancials()">
+        Update financials
+      </button>
+
+      <div class="subs-section">
+        <div class="subs-title">Subscription plans</div>
+        @for (sub of finance.subscriptions(); track sub.name) {
+          <div class="sub-row">
+            <span class="sub-name">{{ sub.name }}</span>
+            <div>
+              <span class="stat-blue">{{ sub.price | currency:'USD':'symbol':'1.0-0' }}/mo</span>
+              <button class="del-btn" (click)="requestDeleteSubscription(sub.name)">×</button>
+            </div>
+          </div>
+        }
+        @if (finance.subscriptions().length === 0) {
+          <div class="empty-msg">No subscriptions yet</div>
+        }
+        <div class="add-sub-row">
+          <input class="add-input" [(ngModel)]="newSubName" placeholder="Subscription name">
+          <input class="add-input" type="number"
+            [(ngModel)]="newSubCost" placeholder="$/mo" style="max-width:80px">
+          <button class="btn-small" (click)="addSubscriptionPlan()">Add</button>
+        </div>
+      </div>
+
+      @if (pendingDeleteSubscription) {
+        <div class="confirm-overlay">
+          <div class="confirm-dialog">
+            <p class="confirm-title">Delete subscription?</p>
+            <p class="confirm-msg">
+              Are you sure you want to delete "{{ pendingDeleteSubscription }}"?
+            </p>
+            <div class="confirm-actions">
+              <button class="confirm-btn cancel" (click)="cancelDeleteSubscription()">Cancel</button>
+              <button class="confirm-btn danger" (click)="confirmDeleteSubscription()">Yes, delete</button>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+
+</div>

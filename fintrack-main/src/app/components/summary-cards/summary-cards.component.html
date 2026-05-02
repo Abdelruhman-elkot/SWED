@@ -1,0 +1,29 @@
+<div class="summary-cards">
+  <div class="scard">
+    <div class="scard-label">Total Spent</div>
+    <div class="scard-val red">
+      {{ finance.totalSpent() | currency: "USD" : "symbol" : "1.0-0" }}
+    </div>
+    <div class="scard-change">
+      {{ finance.budgetRemaining() >= 0 ? (finance.budgetRemaining() | currency:'USD':'symbol':'1.0-0') + ' remaining' : 'Over budget ' + ((-finance.budgetRemaining()) | currency:'USD':'symbol':'1.0-0') }}
+    </div>
+  </div>
+  <div class="scard">
+    <div class="scard-label">Income</div>
+    <div class="scard-val green">
+      {{ finance.income() | currency: "USD" : "symbol" : "1.0-0" }}
+    </div>
+    <div class="scard-change">+12% vs last month</div>
+  </div>
+  <div class="scard">
+    <div class="scard-label">Recurring subscriptions</div>
+    <div class="scard-val blue">
+      {{
+        finance.totalSubscriptions() | currency: "USD" : "symbol" : "1.0-0"
+      }}/mo
+    </div>
+    <div class="scard-change">
+      {{ finance.activeSubscriptionsCount() }} monthly plans
+    </div>
+  </div>
+</div>
