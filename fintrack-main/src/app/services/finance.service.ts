@@ -135,6 +135,25 @@ export class FinanceService {
 
   async addSubscriptionPlan(name: string, price: number) {
     await this.addOrUpdateSubscription(name, price, this.catIcons['Subscription'], this.catBg['Subscription']);
+
+    const icon = this.catIcons['Subscription'];
+    const iconBg = this.catBg['Subscription'];
+    const newTxn = {
+      name: name,
+      amount: price,
+      type: 'subscription',
+      category: 'Subscription',
+      icon: icon,
+      iconBg: iconBg,
+      date: 'Today'
+    };
+    try {
+      const addedTxn = await firstValueFrom(this.http.post<Transaction>(`${this.apiUrl}/transactions`, newTxn));
+      this.transactions.set([addedTxn, ...this.transactions()]);
+      console.log(`Transaction added for subscription: ${name}`);
+    } catch (error) {
+      console.error('Failed to add transaction for new subscription', error);
+    }
   }
 
   async deleteSubscriptionPlan(name: string) {
