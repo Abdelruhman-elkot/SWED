@@ -59,11 +59,24 @@ export class FinanceService {
   }
 
   private async saveFinance() {
-    await firstValueFrom(this.http.patch(`${this.apiUrl}/finance`, {
+    const financeData = {
       balance: this.balance(),
       income: this.income(),
       budget: this.budget()
-    }));
+    };
+    try {
+      await firstValueFrom(this.http.patch(`${this.apiUrl}/finance`, financeData));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  private async recalcAndSaveBalance() {
+    const income = this.transactions().filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    const expense = this.transactions().filter(t => t.type !== 'income').reduce((s, t) => s + t.amount, 0);
+    const newBalance = income - expense;
+    this.balance.set(newBalance);
+    await this.saveFinance();
   }
 
   async addTransaction(name: string, amount: number, type: any, category: string) {
@@ -73,6 +86,7 @@ export class FinanceService {
     try {
       const added = await firstValueFrom(this.http.post<Transaction>(`${this.apiUrl}/transactions`, newTxn));
       this.transactions.set([added, ...this.transactions()]);
+      await this.recalcAndSaveBalance();
       if (type === 'subscription') {
         await this.addOrUpdateSubscription(name, amount, icon, iconBg);
       }
@@ -87,6 +101,7 @@ export class FinanceService {
       await firstValueFrom(this.http.patch(`${this.apiUrl}/transactions/${id}`, updatedFields));
       const updatedTxns = this.transactions().map(t => t.id === id ? { ...t, ...updatedFields } : t);
       this.transactions.set(updatedTxns);
+      await this.recalcAndSaveBalance();
       const oldTxn = this.transactions().find(t => t.id === id);
       if (oldTxn?.type === 'subscription') await this.removeSubscriptionIfUnused(oldTxn.name);
       if (type === 'subscription') await this.addOrUpdateSubscription(name, amount, this.catIcons[category], this.catBg[category]);
@@ -101,6 +116,7 @@ export class FinanceService {
     try {
       await firstValueFrom(this.http.delete(`${this.apiUrl}/transactions/${id}`));
       this.transactions.set(this.transactions().filter(t => t.id !== id));
+      await this.recalcAndSaveBalance();
       if (toDelete.type === 'subscription') {
         await this.removeSubscriptionIfUnused(toDelete.name);
       }
@@ -150,6 +166,7 @@ export class FinanceService {
     try {
       const addedTxn = await firstValueFrom(this.http.post<Transaction>(`${this.apiUrl}/transactions`, newTxn));
       this.transactions.set([addedTxn, ...this.transactions()]);
+      await this.recalcAndSaveBalance();
       console.log(`Transaction added for subscription: ${name}`);
     } catch (error) {
       console.error('Failed to add transaction for new subscription', error);
@@ -159,16 +176,25 @@ export class FinanceService {
   async deleteSubscriptionPlan(name: string) {
     const toDelete = this.subscriptions().find(s => s.name === name);
     if (toDelete && toDelete.id) {
+      const relatedTransactions = this.transactions().filter(t => t.type === 'subscription' && t.name === name);
+      for (const txn of relatedTransactions) {
+        await firstValueFrom(this.http.delete(`${this.apiUrl}/transactions/${txn.id}`));
+      }
+      this.transactions.set(this.transactions().filter(t => !(t.type === 'subscription' && t.name === name)));
+      await this.recalcAndSaveBalance();
+      
       await firstValueFrom(this.http.delete(`${this.apiUrl}/subscriptions/${toDelete.id}`));
       this.subscriptions.set(this.subscriptions().filter(s => s.name !== name));
     }
   }
 
   async updateBalance(newBalance: number) {
+    if (isNaN(newBalance)) return;
     this.balance.set(newBalance);
     await this.saveFinance();
   }
   async updateIncome(newIncome: number) {
+    if (isNaN(newIncome)) return;
     this.income.set(newIncome);
     await this.saveFinance();
   }

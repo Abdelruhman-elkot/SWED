@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FinanceService } from '../services/finance.service';
-import { UserService } from './user.service';
+import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
 
 @Component({
@@ -13,8 +13,9 @@ import { User } from '../models/user.model';
   standalone: true,                       
   imports: [CommonModule, FormsModule, RouterModule]    
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   user: User = { id: 1, name: '', email: '', phone: '' };
+  private subscription: any;
   finance = inject(FinanceService);
   isEditing = false;
   editData: User = { id: 1, name: '', email: '', phone: '' };
@@ -27,10 +28,15 @@ export class UserComponent implements OnInit {
 
   constructor(private userService: UserService) {}
 
-  async ngOnInit() {
-    this.user = await this.userService.getUser();
-    this.tempBalance = this.finance.balance();
-    this.tempIncome = this.finance.income();
+  ngOnInit() {
+    this.subscription = this.userService.currentUser$.subscribe(user => {
+      this.user = user;
+      this.editData = { ...user };
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   get initials(): string {
@@ -43,9 +49,10 @@ export class UserComponent implements OnInit {
   }
 
   async saveEdit() {
-    await this.userService.updateUser(this.editData);
-    this.user = { ...this.editData };
-    this.isEditing = false;
+    const success = await this.userService.updateUser(this.editData);
+    if (success) {
+      this.isEditing = false;
+    }
   }
 
   cancelEdit() { this.isEditing = false; }
